@@ -1,0 +1,10 @@
+{
+  "name": "target",
+  "private": true,
+  "type": "module",
+  "exports": "./index.js",
+  "dependencies": {
+    "@platformatic/node": "^2.38.0",
+    "fastify": "^5.2.1"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "psql-webhooks",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wattpm dev",
+    "build": "wattpm build",
+    "start": "wattpm start",
+    "format": "prettier -w services",
+    "lint": "eslint --cache"
+  },
+  "dependencies": {
+    "wattpm": "^2.38.0"
+  },
+  "workspaces": [
+    "services/*"
+  ],
+  "devDependencies": {
+    "eslint": "^9.18.0",
+    "neostandard": "^0.12.0",
+    "prettier": "^3.4.2"
+  }
+}

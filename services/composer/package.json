@@ -1,0 +1,7 @@
+{
+  "name": "composer",
+  "private": true,
+  "dependencies": {
+    "@platformatic/composer": "^2.38.0"
+  }
+}

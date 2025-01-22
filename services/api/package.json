@@ -1,0 +1,12 @@
+{
+  "name": "api",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.js",
+  "dependencies": {
+    "@databases/pg": "^5.5.0",
+    "@databases/sql": "^3.3.0",
+    "@platformatic/node": "^2.38.0",
+    "fastify": "^5.2.1"
+  }
+}

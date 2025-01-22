@@ -1,0 +1,9 @@
+{
+  "name": "processor",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.js",
+  "dependencies": {
+    "@platformatic/node": "^2.38.0"
+  }
+}
