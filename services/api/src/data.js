@@ -35,21 +35,17 @@ export function queueCreationQuery (body) {
 }
 
 export function messageCreationQuery (body) {
-  let { queue, headers, payload } = body
+  let { queue, headers, payload, schedule } = body
 
   if (!Buffer.isBuffer(payload)) {
-    if (typeof payload === 'object') {
-      payload = JSON.stringify(payload)
-    } else {
-      payload = payload.toString()
-    }
+    payload = typeof payload !== 'string' ? JSON.stringify(payload) : payload.toString()
   }
 
   return sql`
     INSERT INTO pending_messages
-      (queue_id, headers, payload)
+      (queue_id, headers, payload, schedule)
     VALUES 
-      (${queue}, ${headers ?? null}, ${payload})
+      (${queue}, ${headers ?? null}, ${payload}, ${schedule})
     RETURNING id;
   `
 }

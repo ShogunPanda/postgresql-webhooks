@@ -1,4 +1,5 @@
 import sql from '@databases/sql'
+import parser from 'cron-parser'
 
 export function ensureLoggableError (error) {
   Reflect.defineProperty(error, 'message', { enumerable: true })
@@ -25,7 +26,8 @@ export function resignAsLeaderQuery () {
 export function getNextPendingMessageQuery () {
   return sql`
     SELECT 
-      messages.id, messages.queue_id as queue, messages.headers as message_headers, messages.payload, messages.retries,
+      messages.id, messages.queue_id as queue, messages.headers as message_headers, 
+      messages.payload, messages.retries, messages.schedule,
       queues.url, queues.method, queues.headers as queue_headers, queues.max_retries
     FROM 
       pending_messages as messages
@@ -74,6 +76,14 @@ export function markMessageAsCompletedQuery (message, response) {
       (id, queue_id, headers, payload, retries, response)
     VALUES
       (${message.id}, ${message.queue}, ${message.message_headers}, NULL, ${message.retries}, ${serializedResponse})    
+  `
+}
+
+export function rescheduleMessageQuery (message) {
+  return sql`
+    UPDATE pending_messages
+    SET retries=0, execute_at = ${parser.parseExpression(message.schedule).next()}
+    WHERE id=${message.id}
   `
 }
 

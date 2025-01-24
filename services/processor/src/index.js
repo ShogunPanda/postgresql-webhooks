@@ -8,6 +8,7 @@ import {
   markMessageAsFailedQuery,
   markMessageAsProcessingQuery,
   markMessageAsToRetryQuery,
+  rescheduleMessageQuery,
   resignAsLeaderQuery
 } from './data.js'
 
@@ -41,8 +42,6 @@ async function runAsLeader (db, task) {
 
     try {
       await task()
-    } catch (e) {
-      logger.error({ error: ensureLoggableError(e) }, 'AA')
     } finally {
       await leaderConnection.query(resignAsLeaderQuery())
     }
@@ -53,7 +52,12 @@ async function handleMessageSuccess (db, message, response) {
   try {
     await db.tx(async db => {
       await db.query(markMessageAsCompletedQuery(message, response))
-      await db.query(deletePendingMessageQuery(message.id))
+
+      if (message.schedule) {
+        await db.query(rescheduleMessageQuery(message))
+      } else {
+        await db.query(deletePendingMessageQuery(message.id))
+      }
     })
   } catch (e) {
     logger.fatal({ error: ensureLoggableError(e), id: message.id }, 'Error while marking a message as completed.')
@@ -80,7 +84,7 @@ async function handleMessageFailure (db, message, error) {
   }
 }
 
-async function invokeHook (message, db) {
+async function invokeHook (db, message) {
   try {
     const response = await fetch(message.url, {
       method: message.method,

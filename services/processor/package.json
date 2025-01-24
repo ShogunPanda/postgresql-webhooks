@@ -4,6 +4,7 @@
   "type": "module",
   "exports": "./src/index.js",
   "dependencies": {
-    "@platformatic/node": "^2.38.0"
+    "@platformatic/node": "^2.38.0",
+    "cron-parser": "^4.9.0"
   }
 }

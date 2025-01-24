@@ -20,12 +20,13 @@ CREATE TABLE pending_messages (
   headers JSON,
   payload BYTEA DEFAULT NULL,
   retries INTEGER DEFAULT 0,
+  schedule VARCHAR(100) DEFAULT NULL,
   execute_at TIMESTAMPTZ DEFAULT NOW(),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE completed_messages (
-  id SERIAL PRIMARY KEY,
+  id INTEGER,
   queue_id INTEGER NOT NULL REFERENCES queues(id),
   headers JSON,
   payload BYTEA DEFAULT NULL,
@@ -35,7 +36,7 @@ CREATE TABLE completed_messages (
 );
 
 CREATE TABLE failed_messages (
-  id SERIAL PRIMARY KEY,
+  id INTEGER,
   queue_id INTEGER NOT NULL REFERENCES queues(id),
   headers JSON,
   payload BYTEA DEFAULT NULL,
